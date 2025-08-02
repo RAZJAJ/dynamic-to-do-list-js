@@ -1,53 +1,58 @@
 document.addEventListener('DOMContentLoaded', function() {
-   
+    
     const addButton = document.getElementById('add-task-btn');
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
 
-       function addTask() {
-        
+    
+    const addTask = () => {
         const taskText = taskInput.value.trim();
         
-        
-        if (taskText === "") {
-            alert("Please enter a task!");
+        if (!taskText) {
+            alert('Please enter a valid task!');
             return;
         }
+
         
-       
-        const li = document.createElement('li');
+        const taskItem = document.createElement('li');
         
         
-        const taskSpan = document.createElement('span');
-        taskSpan.textContent = taskText;
-        
-       
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
-        removeButton.className = 'remove-btn';
-        
-       
-        removeButton.addEventListener('click', function() {
-            li.remove();
-        });
+        const taskTextElement = document.createElement('span');
+        taskTextElement.className = 'task-text';
+        taskTextElement.textContent = taskText;
         
       
-        li.appendChild(taskSpan);
-        li.appendChild(removeButton);
-        taskList.appendChild(li);
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-btn';
+        deleteButton.innerHTML = '&times;'; 
+        
+       
+        deleteButton.addEventListener('click', () => {
+            taskItem.remove();
+        });
+
+        
+        taskItem.append(taskTextElement, deleteButton);
+        taskList.appendChild(taskItem);
         
        
         taskInput.value = '';
         taskInput.focus();
-    }
+    };
 
-   
+    
     addButton.addEventListener('click', addTask);
-
-    // Event listener for Enter key in input field
-    taskInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
+    
+    taskInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
             addTask();
+        }
+    });
+
+    // Event delegation for task list (better for dynamic elements)
+    taskList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-btn')) {
+            e.target.parentElement.remove();
         }
     });
 });
